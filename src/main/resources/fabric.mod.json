@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "cascade",
+  "version": "${version}",
+  "name": "cascade",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/cascade/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.cascademc.cascade.CascadeClient"
+    ]
+  },
+  "mixins": [
+    "cascade.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}"
+  }
+}
