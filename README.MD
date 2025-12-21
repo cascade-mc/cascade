@@ -17,12 +17,14 @@ A Minecraft client mod that adds Lua scripting support with an easy-to-use API.
 
 ### Loading Scripts
 
-Scripts are stored in `.minecraft/cascade/scripts/`. Use the `/loadscript <filename>` command to load them.
+Scripts are stored in `.minecraft/cascade/scripts/`.
+Use the `/loadscript <filename>` command to load them.
 
 ### Available APIs
 
 #### Chat API
-- `print_chat(message)` - Send a formatted message to chat (supports MiniMessage syntax)
+- `chat.print(message)` – Send a formatted message to chat (supports MiniMessage syntax)
+- `chat.clear()` – Clear chat messages
 
 ## Building
 ```bash
@@ -33,4 +35,9 @@ The compiled jar will be in `build/libs/
 
 ## License
 
-This project is licensed under the MIT License - saee the [LICENSE.txt](LICENSE.txt) file for details.
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
+
+## Credits
+
+- Developed by **Moof**
+- ImGui impl from [FlorianMichael](https://github.com/FlorianMichael)
