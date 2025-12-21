@@ -7,11 +7,13 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cascademc.cascade.CascadeClient;
 import dev.cascademc.cascade.api.ChatAPI;
+import dev.cascademc.cascade.screens.TestScreen;
 import dev.cascademc.cascade.script.ScriptManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.client.Minecraft;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,6 +35,17 @@ public class CommandRegistry {
                                 .suggests(this::suggestScripts)
                                 .executes(this::executeLoadScript)
                         )
+        );
+
+        dispatcher.register(
+                ClientCommandManager.literal("cascademenu")
+                        .executes(context -> {
+                            Minecraft client = Minecraft.getInstance();
+                            client.execute(() -> {
+                                client.setScreen(new TestScreen());
+                            });
+                            return 1;
+                        })
         );
     }
 

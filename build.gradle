@@ -22,13 +22,17 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    implementation 'net.kyori:adventure-text-minimessage:4.26.1'
-    implementation 'net.kyori:adventure-text-serializer-gson:4.26.1'
-    include 'net.kyori:adventure-text-minimessage:4.26.1'
-    include 'net.kyori:adventure-text-serializer-gson:4.26.1'
+    include implementation("net.kyori:adventure-text-minimessage:${project.minimessage_version}")
+    include implementation("net.kyori:adventure-text-serializer-gson:${project.minimessage_version}")
 
-    implementation 'org.luaj:luaj-jse:3.0.1'
-    include 'org.luaj:luaj-jse:3.0.1'
+    include implementation("org.luaj:luaj-jse:${project.luaj_version}")
+
+    include implementation("io.github.spair:imgui-java-binding:${project.imgui_version}")
+    include implementation("io.github.spair:imgui-java-lwjgl3:${project.imgui_version}")
+
+    include implementation("io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
+    include implementation("io.github.spair:imgui-java-natives-linux:${project.imgui_version}")
+    include implementation("io.github.spair:imgui-java-natives-macos:${project.imgui_version}")
 }
 
 processResources {

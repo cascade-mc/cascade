@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "imgui.MinecraftMixin",
+    "imgui.MixinGameRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
