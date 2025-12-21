@@ -6,18 +6,24 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 public class LuaEnvironment {
     private final Globals globals;
+    private final LuaAnnotationProcessor processor;
 
     public LuaEnvironment() {
         this.globals = JsePlatform.standardGlobals();
+        this.processor = new LuaAnnotationProcessor(globals);
         registerAPIs();
     }
 
     private void registerAPIs() {
-        ChatAPI.register(globals);
+        processor.registerAPI(new ChatAPI());
     }
 
     public Globals getGlobals() {
         return globals;
+    }
+
+    public LuaAnnotationProcessor getProcessor() {
+        return processor;
     }
 
     public void execute(String script) {
