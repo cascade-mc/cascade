@@ -18,7 +18,7 @@ A Minecraft client mod that adds Lua scripting support with an easy-to-use API.
 ### Loading Scripts
 
 Scripts are stored in `.minecraft/cascade/scripts/`.
-Use the `/loadscript <filename>` command to load them.
+Use the `/cascade load <filename>` command to load them.
 
 ### Available APIs
 
