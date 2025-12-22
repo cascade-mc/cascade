@@ -7,10 +7,11 @@ import dev.cascademc.cascade.imgui.ImGuiImpl;
 import dev.cascademc.cascade.imgui.RenderInterface;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiInputTextFlags;
+import imgui.extension.texteditor.TextEditor;
+import imgui.extension.texteditor.TextEditorCoordinates;
+import imgui.extension.texteditor.TextEditorLanguageDefinition;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImString;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,8 @@ import net.minecraft.network.chat.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestScreen extends Screen implements RenderInterface {
 
@@ -27,10 +30,24 @@ public class TestScreen extends Screen implements RenderInterface {
     private Path currentFilePath;
     private boolean fileDirty = false;
 
-    private final ImString editorBuffer = new ImString(1024 * 64);
+    private final TextEditor editor = new TextEditor();
 
     public TestScreen() {
         super(Component.literal("Script Editor"));
+        setupEditor();
+    }
+
+    private void setupEditor() {
+        TextEditorLanguageDefinition lang = TextEditorLanguageDefinition.Lua();
+
+        Map<String, String> identifierMap = new HashMap<>();
+
+        identifierMap.put("chat.print", "Print a message to chat\nchat.print(message: string)");
+        identifierMap.put("chat.clear", "Clear the chat\nchat.clear()");
+
+        lang.setIdentifiers(identifierMap);
+
+        editor.setLanguageDefinition(lang);
     }
 
     @Override
@@ -85,10 +102,11 @@ public class TestScreen extends Screen implements RenderInterface {
     private void loadFile(Path path) {
         try {
             currentFilePath = path;
-            editorBuffer.set(Files.readString(path));
+            String content = Files.readString(path);
+            editor.setText(content);
             fileDirty = false;
         } catch (IOException e) {
-            editorBuffer.set("-- Failed to load file");
+            editor.setText("-- Failed to load file");
             e.printStackTrace();
         }
     }
@@ -97,7 +115,7 @@ public class TestScreen extends Screen implements RenderInterface {
         if (currentFilePath == null) return;
 
         try {
-            Files.writeString(currentFilePath, editorBuffer.get());
+            Files.writeString(currentFilePath, editor.getText());
             fileDirty = false;
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,6 +157,14 @@ public class TestScreen extends Screen implements RenderInterface {
                 if (currentFilePath != null) {
                     ImGui.text(currentFilePath.getFileName().toString());
 
+                    ImGui.sameLine();
+                    TextEditorCoordinates pos = editor.getCursorPosition();
+                    ImGui.text(" | Line " + (pos.mLine + 1) + ", Col " + (pos.mColumn + 1));
+
+                    if (editor.isTextChanged()) {
+                        fileDirty = true;
+                    }
+
                     if (fileDirty) {
                         ImGui.sameLine();
                         ImGui.textColored(1f, 0.5f, 0.2f, 1f, "*");
@@ -146,21 +172,24 @@ public class TestScreen extends Screen implements RenderInterface {
 
                     ImGui.separator();
 
-                    if (ImGui.inputTextMultiline(
-                            "##editor",
-                            editorBuffer,
-                            ImGui.getContentRegionAvailX(),
-                            ImGui.getContentRegionAvailY() - 30,
-                            ImGuiInputTextFlags.AllowTabInput
-                    )) {
-                        fileDirty = true;
+                    if (ImGui.button("Save")) {
+                        saveFile();
                     }
 
-                    if (fileDirty) {
-                        if (ImGui.button("Save")) {
-                            saveFile();
-                        }
+                    ImGui.sameLine();
+                    if (ImGui.button("Undo") && editor.canUndo()) {
+                        editor.undo(1);
                     }
+
+                    ImGui.sameLine();
+                    if (ImGui.button("Redo") && editor.canRedo()) {
+                        editor.redo(1);
+                    }
+
+                    ImGui.separator();
+
+                    editor.render("##editor");
+
                 } else {
                     ImGui.text("Select a script from the left to begin editing.");
                 }
