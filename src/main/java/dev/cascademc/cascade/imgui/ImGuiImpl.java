@@ -64,7 +64,7 @@ public final class ImGuiImpl {
         style.setPopupRounding(5.0f);
         style.setScrollbarRounding(5.0f);
 
-        style.setWindowPadding(new ImVec2(0, 0));
+        style.setWindowPadding(new ImVec2(8, 8));
         style.setFramePadding(new ImVec2(6, 4));
         style.setItemSpacing(new ImVec2(8, 6));
         style.setPopupBorderSize(0.0f);
