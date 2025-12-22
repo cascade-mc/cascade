@@ -10,6 +10,7 @@ import imgui.ImGuiIO;
 import imgui.extension.texteditor.TextEditor;
 import imgui.extension.texteditor.TextEditorCoordinates;
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
+import imgui.extension.texteditor.flag.TextEditorPaletteIndex;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import net.fabricmc.loader.api.FabricLoader;
@@ -35,6 +36,7 @@ public class TestScreen extends Screen implements RenderInterface {
     public TestScreen() {
         super(Component.literal("Script Editor"));
         setupEditor();
+        setupEditorColors();
     }
 
     private void setupEditor() {
@@ -48,6 +50,43 @@ public class TestScreen extends Screen implements RenderInterface {
         lang.setIdentifiers(identifierMap);
 
         editor.setLanguageDefinition(lang);
+        editor.setShowWhitespaces(false);
+    }
+
+    private void setupEditorColors() {
+        int[] palette = editor.getPalette();
+
+        palette[TextEditorPaletteIndex.Keyword] = rgbToAbgr(0xC678DD);
+        palette[TextEditorPaletteIndex.Identifier] = rgbToAbgr(0xE06C75);
+        palette[TextEditorPaletteIndex.KnownIdentifier] = rgbToAbgr(0x61AFEF);
+        palette[TextEditorPaletteIndex.String] = rgbToAbgr(0x98C379);
+        palette[TextEditorPaletteIndex.Punctuation] = rgbToAbgr(0xABB2BF);
+        palette[TextEditorPaletteIndex.Cursor] = rgbToAbgr(0xB7BECC);
+
+        palette[TextEditorPaletteIndex.Number] = rgbToAbgr(0xD19A66);
+        palette[TextEditorPaletteIndex.Comment] = rgbToAbgr(0x5C6370);
+        palette[TextEditorPaletteIndex.Preprocessor] = rgbToAbgr(0xC678DD);
+
+        palette[TextEditorPaletteIndex.Background] = rgbToAbgr(0x18181E);
+        palette[TextEditorPaletteIndex.Selection] = rgbToAbgr(0x292D35);
+        palette[TextEditorPaletteIndex.LineNumber] = rgbToAbgr(0x4B5263);
+        palette[TextEditorPaletteIndex.CurrentLineFill] = rgbToAbgr(0x21252D);
+        palette[TextEditorPaletteIndex.CurrentLineFillInactive] = rgbToAbgr(0x252A33);
+        palette[TextEditorPaletteIndex.CurrentLineEdge] = rgbToAbgr(0x292D35);
+
+        palette[TextEditorPaletteIndex.ErrorMarker] = rgbToAbgr(0xE06C75);
+        palette[TextEditorPaletteIndex.Breakpoint] = rgbToAbgr(0x61AFEF);
+
+        editor.setPalette(palette);
+    }
+
+    private int rgbToAbgr(int rgb) {
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        int a = 0xFF;
+
+        return (a << 24) | (b << 16) | (g << 8) | r;
     }
 
     @Override
