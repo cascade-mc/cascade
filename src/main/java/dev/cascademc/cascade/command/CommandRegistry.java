@@ -31,7 +31,7 @@ public class CommandRegistry {
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(
                 ClientCommandManager.literal("loadscript")
-                        .then(ClientCommandManager.argument("filename", StringArgumentType.string())
+                        .then(ClientCommandManager.argument("filename", StringArgumentType.greedyString())
                                 .suggests(this::suggestScripts)
                                 .executes(this::executeLoadScript)
                         )
@@ -50,37 +50,48 @@ public class CommandRegistry {
     }
 
     private int executeLoadScript(CommandContext<FabricClientCommandSource> context) {
-        String filename = StringArgumentType.getString(context, "filename");
+        String input = StringArgumentType.getString(context, "filename");
 
-        if (!filename.endsWith(".lua")) {
-            filename += ".lua";
+        input = input.replace("\\", "/");
+
+        if (!input.endsWith(".lua")) {
+            input += ".lua";
         }
 
         try {
-            scriptManager.loadScript(filename);
+            scriptManager.loadScript(input);
+
             sendMessage(context, Component.text("Loaded script: ", NamedTextColor.GREEN)
-                    .append(Component.text(filename, NamedTextColor.YELLOW)));
+                    .append(Component.text(input, NamedTextColor.YELLOW)));
             return 1;
         } catch (Exception e) {
-            sendMessage(context, Component.text("Failed to load script: " + filename, NamedTextColor.RED));
+            sendMessage(context, Component.text("Failed to load script: " + input, NamedTextColor.RED));
             CascadeClient.LOGGER.error("Failed to load script via command", e);
             return 0;
         }
     }
 
-    private CompletableFuture<Suggestions> suggestScripts(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
+    private CompletableFuture<Suggestions> suggestScripts(
+            CommandContext<FabricClientCommandSource> context,
+            SuggestionsBuilder builder
+    ) {
         try {
             Path scriptsDir = scriptManager.getScriptsDirectory();
+
             if (Files.exists(scriptsDir)) {
-                try (Stream<Path> files = Files.list(scriptsDir)) {
-                    files.filter(path -> path.toString().endsWith(".lua"))
-                            .map(path -> path.getFileName().toString())
+                try (Stream<Path> paths = Files.walk(scriptsDir)) {
+                    paths
+                            .filter(Files::isRegularFile)
+                            .filter(path -> path.toString().endsWith(".lua"))
+                            .map(scriptsDir::relativize)
+                            .map(path -> path.toString().replace("\\", "/"))
                             .forEach(builder::suggest);
                 }
             }
         } catch (IOException e) {
             CascadeClient.LOGGER.error("Error listing scripts for suggestions", e);
         }
+
         return builder.buildFuture();
     }
 
