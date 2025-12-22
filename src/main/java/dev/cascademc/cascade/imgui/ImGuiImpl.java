@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.*;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.Minecraft;
@@ -28,6 +30,8 @@ public final class ImGuiImpl {
     private final static ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
 
     private static short[] glyphRanges;
+    private static ImFont defaultFont;
+    private static ImFont boldFont;
 
     public static void create(final long handle) {
         ImGui.createContext();
@@ -36,19 +40,82 @@ public final class ImGuiImpl {
         final ImGuiIO data = ImGui.getIO();
         data.setIniFilename("cascade.ini");
 
-        // If you want to have custom fonts, you can use the following code here
-        //final ImFont defaultFont = loadFont("/fonts/YourFont.ttf", 16);
-        // In ImGui windows, you can set the font like this:
-        //ImGui.pushFont(defaultFont);
-        //ImGui.popFont();
+        defaultFont = loadFont("/fonts/Inter-Regular.ttf", 16);
+        boldFont = loadFont("/fonts/Inter-Bold.ttf", 16);
+
+        data.getFonts().build();
 
         data.setConfigFlags(ImGuiConfigFlags.DockingEnable);
 
-        // In case you want to enable Viewports on Windows, replace the line above with this one:
-        //data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
-
         imGuiImplGlfw.init(handle, true);
         imGuiImplGl3.init();
+
+        ImGui.styleColorsDark();
+        applyColors();
+        applyStyles();
+    }
+
+    private static void applyStyles() {
+        ImGuiStyle style = ImGui.getStyle();
+        style.setWindowRounding(5.0f);
+        style.setFrameRounding(5.0f);
+        style.setGrabRounding(5.0f);
+        style.setTabRounding(5.0f);
+        style.setPopupRounding(5.0f);
+        style.setScrollbarRounding(5.0f);
+
+        style.setWindowPadding(new ImVec2(0, 0));
+        style.setFramePadding(new ImVec2(6, 4));
+        style.setItemSpacing(new ImVec2(8, 6));
+        style.setPopupBorderSize(0.0f);
+    }
+
+    private static void applyColors() {
+        ImVec4[] colors = ImGui.getStyle().getColors();
+
+        colors[ImGuiCol.WindowBg].set(new ImVec4(0.07f, 0.07f, 0.09f, 1.00f));
+        colors[ImGuiCol.MenuBarBg].set(new ImVec4(0.12f, 0.12f, 0.15f, 1.00f));
+        colors[ImGuiCol.PopupBg].set(new ImVec4(0.18f, 0.18f, 0.22f, 1.00f));
+        colors[ImGuiCol.Header].set(new ImVec4(0.18f, 0.18f, 0.22f, 1.00f));
+        colors[ImGuiCol.HeaderHovered].set(new ImVec4(0.30f, 0.30f, 0.40f, 1.00f));
+        colors[ImGuiCol.HeaderActive].set(new ImVec4(0.25f, 0.25f, 0.35f, 1.00f));
+        colors[ImGuiCol.Button].set(new ImVec4(0.20f, 0.22f, 0.27f, 1.00f));
+        colors[ImGuiCol.ButtonHovered].set(new ImVec4(0.30f, 0.32f, 0.40f, 1.00f));
+        colors[ImGuiCol.ButtonActive].set(new ImVec4(0.35f, 0.38f, 0.50f, 1.00f));
+        colors[ImGuiCol.FrameBg].set(new ImVec4(0.15f, 0.15f, 0.18f, 1.00f));
+        colors[ImGuiCol.FrameBgHovered].set(new ImVec4(0.22f, 0.22f, 0.27f, 1.00f));
+        colors[ImGuiCol.FrameBgActive].set(new ImVec4(0.25f, 0.25f, 0.30f, 1.00f));
+        colors[ImGuiCol.Tab].set(new ImVec4(0.18f, 0.18f, 0.22f, 1.00f));
+        colors[ImGuiCol.TabHovered].set(new ImVec4(0.35f, 0.35f, 0.50f, 1.00f));
+        colors[ImGuiCol.TabActive].set(new ImVec4(0.25f, 0.25f, 0.38f, 1.00f));
+        colors[ImGuiCol.TabUnfocused].set(new ImVec4(0.13f, 0.13f, 0.17f, 1.00f));
+        colors[ImGuiCol.TabUnfocusedActive].set(new ImVec4(0.20f, 0.20f, 0.25f, 1.00f));
+        colors[ImGuiCol.TitleBg].set(new ImVec4(0.12f, 0.12f, 0.15f, 1.00f));
+        colors[ImGuiCol.TitleBgActive].set(new ImVec4(0.15f, 0.15f, 0.20f, 1.00f));
+        colors[ImGuiCol.TitleBgCollapsed].set(new ImVec4(0.10f, 0.10f, 0.12f, 1.00f));
+        colors[ImGuiCol.Border].set(new ImVec4(0.20f, 0.20f, 0.25f, 0.50f));
+        colors[ImGuiCol.BorderShadow].set(new ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
+        colors[ImGuiCol.Text].set(new ImVec4(0.90f, 0.90f, 0.95f, 1.00f));
+        colors[ImGuiCol.TextDisabled].set(new ImVec4(0.50f, 0.50f, 0.55f, 1.00f));
+        colors[ImGuiCol.CheckMark].set(new ImVec4(0.50f, 0.70f, 1.00f, 1.00f));
+        colors[ImGuiCol.SliderGrab].set(new ImVec4(0.50f, 0.70f, 1.00f, 1.00f));
+        colors[ImGuiCol.SliderGrabActive].set(new ImVec4(0.60f, 0.80f, 1.00f, 1.00f));
+        colors[ImGuiCol.ResizeGrip].set(new ImVec4(0.50f, 0.70f, 1.00f, 0.50f));
+        colors[ImGuiCol.ResizeGripHovered].set(new ImVec4(0.60f, 0.80f, 1.00f, 0.75f));
+        colors[ImGuiCol.ResizeGripActive].set(new ImVec4(0.70f, 0.90f, 1.00f, 1.00f));
+        colors[ImGuiCol.ScrollbarBg].set(new ImVec4(0.10f, 0.10f, 0.12f, 1.00f));
+        colors[ImGuiCol.ScrollbarGrab].set(new ImVec4(0.30f, 0.30f, 0.35f, 1.00f));
+        colors[ImGuiCol.ScrollbarGrabHovered].set(new ImVec4(0.40f, 0.40f, 0.50f, 1.00f));
+        colors[ImGuiCol.ScrollbarGrabActive].set(new ImVec4(0.45f, 0.45f, 0.55f, 1.00f));
+
+        ImGui.getStyle().setColors(colors);
+    }
+
+    /**
+     * Helper method to create ImVec4 color from RGBA values (0-255)
+     */
+    private static ImVec4 rgba(int r, int g, int b, int a) {
+        return new ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
     }
 
     public static void beginImGuiRendering() {
@@ -58,7 +125,7 @@ public final class ImGuiImpl {
         GL11C.glViewport(0, 0, framebuffer.width, framebuffer.height);
 
         imGuiImplGl3.newFrame();
-        imGuiImplGlfw.newFrame(); // Handle keyboard and mouse interactions
+        imGuiImplGlfw.newFrame();
         ImGui.newFrame();
     }
 
@@ -107,6 +174,20 @@ public final class ImGuiImpl {
         }
     }
 
+    /**
+     * Get the default font (regular weight)
+     */
+    public static ImFont getDefaultFont() {
+        return defaultFont;
+    }
+
+    /**
+     * Get the bold font
+     */
+    public static ImFont getBoldFont() {
+        return boldFont;
+    }
+
     public static void dispose() {
         imGuiImplGl3.shutdown();
         imGuiImplGlfw.shutdown();
@@ -114,5 +195,4 @@ public final class ImGuiImpl {
         ImPlot.destroyContext();
         ImGui.destroyContext();
     }
-
 }
