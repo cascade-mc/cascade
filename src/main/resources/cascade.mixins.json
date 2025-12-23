@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "accessor.KeyboardHandlerAccessor",
+    "accessor.MouseHandlerAccessor",
     "imgui.MinecraftMixin",
     "imgui.MixinGameRenderer"
   ],
