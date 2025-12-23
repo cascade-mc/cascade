@@ -1,6 +1,7 @@
 package dev.cascademc.cascade.script;
 
 import dev.cascademc.cascade.api.ChatAPI;
+import dev.cascademc.cascade.api.InputAPI;
 import dev.cascademc.cascade.script.annotation.LuaAPI;
 import dev.cascademc.cascade.script.annotation.LuaFunction;
 import org.luaj.vm2.Globals;
@@ -23,6 +24,7 @@ public class LuaEnvironment {
 
     private void registerAPIs() {
         registerAPI(new ChatAPI());
+        registerAPI(new InputAPI());
     }
 
     private void registerAPI(Object apiInstance) {
