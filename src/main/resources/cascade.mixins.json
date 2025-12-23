@@ -9,7 +9,7 @@
     "accessor.KeyboardHandlerAccessor",
     "accessor.MouseHandlerAccessor",
     "imgui.MinecraftMixin",
-    "imgui.MixinGameRenderer"
+    "imgui.GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
