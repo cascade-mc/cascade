@@ -16,6 +16,12 @@ public class CommandRegistry {
         dispatcher.register(
                 ClientCommandManager.literal("cascade")
                         .then(new LoadCommand(scriptManager).build())
+                        .then(new UnloadCommand(scriptManager).build())
+                        .then(new ReloadCommand(scriptManager).build())
+                        .then(new EnableCommand(scriptManager).build())
+                        .then(new DisableCommand(scriptManager).build())
+                        .then(new ToggleCommand(scriptManager).build())
+                        .then(new RunCommand(scriptManager).build())
                         .then(new MenuCommand().build())
         );
     }

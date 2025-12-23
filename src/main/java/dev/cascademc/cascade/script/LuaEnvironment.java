@@ -1,6 +1,7 @@
 package dev.cascademc.cascade.script;
 
 import dev.cascademc.cascade.api.ChatAPI;
+import dev.cascademc.cascade.api.EventAPI;
 import dev.cascademc.cascade.api.InputAPI;
 import dev.cascademc.cascade.api.PlayerAPI;
 import dev.cascademc.cascade.script.annotation.LuaAPI;
