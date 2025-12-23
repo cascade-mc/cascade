@@ -9,7 +9,7 @@ public class PlayerAPI {
 
     private final Minecraft mc = Minecraft.getInstance();
 
-    @LuaFunction(description = "makes the player jump")
+    @LuaFunction(description = "Makes the player jump")
     public void jump() {
         if (mc.player == null) return;
 
