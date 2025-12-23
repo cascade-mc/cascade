@@ -155,8 +155,6 @@ public class InputHandler {
         });
     }
 
-    // now it should work how i want :)
-
     private static boolean isKeyPressed(int keyCode) {
         return GLFW.glfwGetKey(mc.getWindow().handle(), keyCode) == GLFW.GLFW_PRESS;
     }
