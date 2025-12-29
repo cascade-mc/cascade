@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import dev.cascademc.cascade.script.annotation.LuaAPI;
-import dev.cascademc.cascade.script.annotation.LuaFunction;
+import dev.cascademc.cascade.script.annotation.LuaMethod;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -17,7 +17,7 @@ public class ChatAPI {
     private static final GsonComponentSerializer GSON_SERIALIZER = GsonComponentSerializer.gson();
     private static final Gson GSON = new Gson();
 
-    @LuaFunction(value = "print", description = "Prints a message to the chat")
+    @LuaMethod(value = "print", description = "Prints a message to the chat")
     public void printChat(String message) {
         Minecraft client = Minecraft.getInstance();
         if (client.player != null) {
@@ -27,7 +27,7 @@ public class ChatAPI {
         }
     }
 
-    @LuaFunction(description = "Clears all chat messages")
+    @LuaMethod(description = "Clears all chat messages")
     public void clear() {
         Minecraft client = Minecraft.getInstance();
         client.gui.getChat().clearMessages(false);

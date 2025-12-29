@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LuaFunction {
+public @interface LuaMethod {
     /**
      * The name of the function in Lua. Defaults to the method name.
      */

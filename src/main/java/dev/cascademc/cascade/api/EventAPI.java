@@ -1,8 +1,9 @@
 package dev.cascademc.cascade.api;
 
 import dev.cascademc.cascade.script.annotation.LuaAPI;
-import dev.cascademc.cascade.script.annotation.LuaFunction;
+import dev.cascademc.cascade.script.annotation.LuaMethod;
 import dev.cascademc.cascade.script.event.EventBus;
+import org.luaj.vm2.LuaFunction;
 
 @LuaAPI(namespace = "event")
 public class EventAPI {
@@ -12,8 +13,8 @@ public class EventAPI {
         this.currentScriptId = currentScriptId;
     }
 
-    @LuaFunction(description = "Register a handler for the tick event")
-    public void tick(org.luaj.vm2.LuaFunction callback) {
+    @LuaMethod(description = "Register a handler for the tick event")
+    public void tick(LuaFunction callback) {
         EventBus.get().subscribe(currentScriptId, "tick", callback);
     }
 }

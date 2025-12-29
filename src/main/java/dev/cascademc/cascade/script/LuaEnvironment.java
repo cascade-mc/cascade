@@ -1,11 +1,10 @@
 package dev.cascademc.cascade.script;
 
 import dev.cascademc.cascade.api.ChatAPI;
-import dev.cascademc.cascade.api.EventAPI;
 import dev.cascademc.cascade.api.InputAPI;
 import dev.cascademc.cascade.api.PlayerAPI;
 import dev.cascademc.cascade.script.annotation.LuaAPI;
-import dev.cascademc.cascade.script.annotation.LuaFunction;
+import dev.cascademc.cascade.script.annotation.LuaMethod;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
@@ -41,7 +40,7 @@ public class LuaEnvironment {
         String namespace = apiAnnotation != null ? apiAnnotation.namespace() : "";
 
         for (Method method : clazz.getDeclaredMethods()) {
-            LuaFunction luaFunc = method.getAnnotation(LuaFunction.class);
+            LuaMethod luaFunc = method.getAnnotation(LuaMethod.class);
             if (luaFunc != null) {
                 String functionName = luaFunc.value().isEmpty()
                         ? method.getName()
@@ -57,7 +56,7 @@ public class LuaEnvironment {
         }
     }
 
-    private String buildMethodDocumentation(Method method, LuaFunction annotation) {
+    private String buildMethodDocumentation(Method method, LuaMethod annotation) {
         StringBuilder doc = new StringBuilder();
 
         if (!annotation.description().isEmpty()) {

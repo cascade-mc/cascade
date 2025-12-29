@@ -1,7 +1,7 @@
 package dev.cascademc.cascade.script;
 
 import dev.cascademc.cascade.script.annotation.LuaAPI;
-import dev.cascademc.cascade.script.annotation.LuaFunction;
+import dev.cascademc.cascade.script.annotation.LuaMethod;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
@@ -34,7 +34,7 @@ public class LuaAnnotationProcessor {
         String namespace = apiAnnotation != null ? apiAnnotation.namespace() : "";
 
         for (Method method : clazz.getDeclaredMethods()) {
-            LuaFunction luaFunc = method.getAnnotation(LuaFunction.class);
+            LuaMethod luaFunc = method.getAnnotation(LuaMethod.class);
             if (luaFunc != null) {
                 registerMethod(apiInstance, method, luaFunc, namespace);
             }
@@ -53,14 +53,14 @@ public class LuaAnnotationProcessor {
                 continue;
             }
 
-            LuaFunction luaFunc = method.getAnnotation(LuaFunction.class);
+            LuaMethod luaFunc = method.getAnnotation(LuaMethod.class);
             if (luaFunc != null) {
                 registerMethod(null, method, luaFunc, namespace);
             }
         }
     }
 
-    private void registerMethod(Object instance, Method method, LuaFunction annotation, String namespace) {
+    private void registerMethod(Object instance, Method method, LuaMethod annotation, String namespace) {
         method.setAccessible(true);
 
         String functionName = annotation.value().isEmpty()
